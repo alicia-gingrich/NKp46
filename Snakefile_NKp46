@@ -1,0 +1,77 @@
+from itertools import chain, combinations
+from os.path import join
+import glob
+import re
+
+RAWDATA_DIR = '/vol_b/rawdata'
+
+SAMPLE_NAMES = ['Canine_NK_Day_0_HVE5_2_15_19', 'Canine_NK_Day_0_IRS4_12_14_18', 'Canine_NK_Day_0_KPC6_11_27_18', 'Canine_NK_Day_0_VBE7_12_14_18', 'PHG_4_D0_NKp46', 'PLS_6_D0_NKp46', 'SSO_5_D0_NKp46', 'JHA_7_D14_NKp46', 'YIQ_5_D14_NKp46', 'YIS_6_D14_NKp46', 'JHA_7_D14_US', 'YIQ_5_D14_US', 'YIS_6_D14_US']
+
+rule all:
+    input: 
+        expand('outputs/quant_cf_nonribo/{sample}_quant/quant.sf', sample = SAMPLE_NAMES),
+		expand('outputs/ribo/{sample}-nonribo.qc.fq.gz', sample = SAMPLE_NAMES)
+
+rule cat_fastq:
+    output: 'inputs/cat/{sample}.fq.gz'
+    params: indir = RAWDATA_DIR
+    shell:'''
+    cat {params.indir}/{wildcards.sample}_S*_L00*_R1_001.fastq.gz > {output} 
+    '''
+
+rule first_12_qc:
+    output: 'outputs/quality/{sample}.trim.fq.gz'
+    input: 'inputs/cat/{sample}.fq.gz'
+    conda: 'env.yml'
+    shell:''' 
+    trimmomatic SE {input} {output} LEADING:12
+    '''
+    
+rule bbduk_qc:
+    output: 'outputs/quality/{sample}.trimbb.fq.gz'
+    input:
+        fq = 'outputs/quality/{sample}.trim.fq.gz',
+        polyA = 'inputs/polyA.fa.gz',
+        truseqr = 'inputs/truseq_rna.fa.gz',
+        truseq = 'inputs/truseq.fa.gz'
+    conda: 'env.yml'
+    shell:'''
+    bbduk.sh in={input.fq} out={output} ref={input.polyA},{input.truseq},{input.truseqr} k=13 ktrim=r useshortkmers=t mink=5 qtrim=r trimq=10 minlength=20
+    '''
+
+rule bbduk_find_ribo:
+    output:
+        ribo='outputs/ribo/{sample}-ribo.qc.fq.gz',
+        nonribo='outputs/ribo/{sample}-nonribo.qc.fq.gz'
+    input: 
+        reads='outputs/quality/{sample}.trimbb.fq.gz',
+        ribo='inputs/humanribo.fas'
+    conda: 'env.yml'
+    shell:'''
+    bbduk.sh -Xmx4g in={input.reads} outm={output.ribo} outu={output.nonribo} k=31 ref={input.ribo}
+    '''
+
+rule download_cf_transcriptome:
+    output: 'inputs/transcriptomes/GCF_000002285.3_CanFam3.1_rna.fna.gz'
+    shell:'''
+    curl -L ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/285/GCF_000002285.3_CanFam3.1/GCF_000002285.3_CanFam3.1_rna.fna.gz -o {output}
+    '''
+
+rule index_cf:
+    output: directory('inputs/transcriptomes/cf_index')
+    input: 'inputs/transcriptomes/GCF_000002285.3_CanFam3.1_rna.fna.gz'
+    conda: 'env.yml'
+    shell:'''
+    salmon index -t {input} -i {output}
+    '''
+
+rule salmon_cf:
+    output: 'outputs/quant_cf_nonribo/{sample}_quant/quant.sf',
+    input:
+        fq = 'outputs/ribo/{sample}-nonribo.qc.fq.gz',
+        indx = 'inputs/transcriptomes/cf_index'
+    conda: 'env.yml'
+    params: outdir = "outputs/quant_cf_nonribo/{sample}_quant/"
+    shell:'''
+    salmon quant -i {input.indx} -l A -r {input.fq} --writeUnmappedNames -o {params.outdir}
+    '''
