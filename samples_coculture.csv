@@ -1,0 +1,7 @@
+sample,files,marker,treatment,combined,specimen
+JHA_7_D14_US,outputs/JHA_7_D14_US_quant.sf,unbiased,coculture,Unbiasedcoculture,JHA7
+YIQ_5_D14_US,outputs/YIQ_5_D14_US_quant.sf,unbiased,coculture,Unbiasedcoculture,YIQ5
+YIS_6_D14_US,outputs/YIS_6_D14_US_quant.sf,unbiased,coculture,Unbiasedcoculture,YIS6
+JHA_7_D14_NKp46,outputs/JHA_7_D14_NKp46_quant.sf,NKp46,coculture,NKp46coculture,JHA7
+YIQ_5_D14_NKp46,outputs/YIQ_5_D14_NKp46_quant.sf,NKp46,coculture,NKp46coculture,YIQ5
+YIS_6_D14_NKp46,outputs/YIS_6_D14_NKp46_quant.sf,NKp46,coculture,NKp46coculture,YIS6

@@ -1,0 +1,14 @@
+sample,files,marker,treatment,combined,specimen
+Canine_NK_Day_0_HVE5_2_15_19,outputs/Canine_NK_Day_0_HVE5_2_15_19_quant.sf,CD5dim,resting,CD5resting,HVE5
+Canine_NK_Day_0_IRS4_12_14_18,outputs/Canine_NK_Day_0_IRS4_12_14_18_quant.sf,CD5dim,resting,CD5resting,IRS4
+Canine_NK_Day_0_KPC6_11_27_18,outputs/Canine_NK_Day_0_KPC6_11_27_18_quant.sf,CD5dim,resting,CD5resting,KPC6
+Canine_NK_Day_0_VBE7_12_14_18,outputs/Canine_NK_Day_0_VBE7_12_14_18_quant.sf,CD5dim,resting,CD5resting,VBE7
+PHG_4_D0_NKp46,outputs/PHG_4_D0_NKp46_quant.sf,NKp46,resting,NKp46resting,PHG4
+PLS_6_D0_NKp46,outputs/PLS_6_D0_NKp46_quant.sf,NKp46,resting,NKp46resting,PLS6
+SSO_5_D0_NKp46,outputs/SSO_5_D0_NKp46_quant.sf,NKp46,resting,NKp46resting,SSO5
+JHA_7_D14_US,outputs/JHA_7_D14_US_quant.sf,unbiased,coculture,Unbiasedcoculture,JHA7
+YIQ_5_D14_US,outputs/YIQ_5_D14_US_quant.sf,unbiased,coculture,Unbiasedcoculture,YIQ5
+YIS_6_D14_US,outputs/YIS_6_D14_US_quant.sf,unbiased,coculture,Unbiasedcoculture,YIS6
+JHA_7_D14_NKp46,outputs/JHA_7_D14_NKp46_quant.sf,NKp46,coculture,NKp46coculture,JHA7
+YIQ_5_D14_NKp46,outputs/YIQ_5_D14_NKp46_quant.sf,NKp46,coculture,NKp46coculture,YIQ5
+YIS_6_D14_NKp46,outputs/YIS_6_D14_NKp46_quant.sf,NKp46,coculture,NKp46coculture,YIS6
